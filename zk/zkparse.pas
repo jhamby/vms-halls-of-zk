@@ -1,4 +1,5 @@
-[inherit('lib$:rtldef',
+[inherit('lib$:typedef',
+	 'pascal$str_routines',
 	 'lib$:zk$def',
 	 'lib$:zk$context_def',
 	 'lib$:zk$lex_def',
@@ -390,7 +391,7 @@ begin
 			string_ast^.node_type:=string_node;
 			string_ast^.list:=nil;
 			string_ast^.string:=''; ast^.left:=string_ast;
-			$upcase(temp, temp);
+			str$upcase(%descr temp, temp);
 			for i:=1 to temp.length do
 				string_ast^.string:=string_ast^.string +
 					temp[i];
@@ -430,7 +431,7 @@ begin
 			new(string_ast, string_node);
 			string_ast^.node_type:=string_node;
 			string_ast^.list:=nil;
-			$upcase(string_ast^.string, symbol.string);
+			str$upcase(%descr string_ast^.string, symbol.string);
 			ast^.left:=string_ast;
 
 			$advance_symbol;

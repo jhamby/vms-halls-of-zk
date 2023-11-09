@@ -1,7 +1,7 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
-	 'lib$:sysdef',
-	 'lib$:clidef',
+	 'starlet',
+	 'pascal$cli_routines',
+	 'pascal$lib_routines',
 	 'lib$:ifc$msg_def',
 	 'lib$:ifc$message_def',
 	 'lib$:ifc$room_def',
@@ -36,30 +36,30 @@ procedure get_filespec(
 var	temp_filename : varying[80] of char;
 	return, context : unsigned;
 begin
-	$get_value('FILENAME', temp_filename);
+	cli$get_value('FILENAME', %descr temp_filename);
 	context:=0;
-	$find_file(temp_filename, source_filename, context, file_type);
-	$find_file_end(context);
+	lib$find_file(temp_filename, %descr source_filename, context, file_type);
+	lib$find_file_end(context);
 
 	temp_filename.length:=0;
-	return:=$present('MACRO');
-	if (odd(return)) then $get_value('MACRO', temp_filename);
+	return:=cli$present('MACRO');
+	if (odd(return)) then cli$get_value('MACRO', %descr temp_filename);
 
 	context:=0;
-	$find_file(temp_filename, macro_filename,
+	lib$find_file(temp_filename, %descr macro_filename,
 			context, '.MAR', source_filename);
-	$find_file_end(context);
+	lib$find_file_end(context);
 
 	macro_filename.length:=index(macro_filename,';')-1;
 
 	temp_filename.length:=0;
-	return:=$present('DEFINITIONS');
-	if (odd(return)) then $get_value('DEFINITIONS', temp_filename);
+	return:=cli$present('DEFINITIONS');
+	if (odd(return)) then cli$get_value('DEFINITIONS', %descr temp_filename);
 
 	context:=0;
-	$find_file(temp_filename, def_filename,
+	lib$find_file(temp_filename, %descr def_filename,
 			context, '.PAS', source_filename);
-	$find_file_end(context);
+	lib$find_file_end(context);
 
 	def_filename.length:=index(def_filename,';')-1;
 end;
@@ -108,7 +108,7 @@ end;
 
 [global] function ifc$help : unsigned;
 begin
-	$signal(ifc$_nyi);
+	lib$signal(ifc$_nyi);
 	ifc$help:=1;
 end;
 
@@ -121,20 +121,20 @@ procedure main;
 var	return : unsigned;
 	command : varying[80] of char;
 begin
-	return:=$get_foreign(command);
+	return:=lib$get_foreign(%descr command);
 	if (command.length<>0) then
 	  begin
-		return:=$dcl_parse(command, command_table);
-		if (odd(return)) then $dispatch;
+		return:=cli$dcl_parse(command, command_table);
+		if (odd(return)) then cli$dispatch;
 	  end
 	else
 	  begin
 		return:=1;
 		while (return<>rms$_eof) do
 		  begin
-			return:=$dcl_parse(,command_table, lib$get_input,
-					lib$get_input, 'ifc> ');
-			if (odd(return)) then return:=$dispatch;
+			return:=cli$dcl_parse(,command_table, %immed lib$get_input,
+					%immed lib$get_input, 'ifc> ');
+			if (odd(return)) then return:=cli$dispatch;
 		  end;
 	  end;
 end;

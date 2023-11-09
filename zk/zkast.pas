@@ -1,4 +1,4 @@
-[inherit('lib$:rtldef',
+[inherit('lib$:typedef',
 	 'lib$:zk$context_def',
 	 'lib$:zk$def',
 	 'lib$:zk$obj', 'lib$:zk$text',
@@ -567,7 +567,7 @@ begin
 	restart_keyword:
 		error:=$restart_game(context);
 	wait_keyword:
-		error:=$wait(context, actor_ptr, actor_name);
+		error:=zk$wait(context, actor_ptr, actor_name);
 	install_keyword:
 		error:=$install_object(context, actor_ptr, actor_name);
 	exit_keyword, quit_keyword:

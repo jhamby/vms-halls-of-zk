@@ -1,4 +1,5 @@
-[inherit('lib$:rtldef',
+[inherit('lib$:typedef',
+	 'pascal$str_routines',
 	 'lib$:ifc$def')]
 module ifc$lex(output);
 
@@ -85,7 +86,7 @@ begin
 	while ((b>=t) and (not found)) do
 	  begin
 		m:=t + (b-t) div 2;
-		state:=$compare(symbol.string, keyword_table[m].name);
+		state:=str$compare(symbol.string, keyword_table[m].name);
 		if (state=0) then found:=true
 		else
 		  begin
@@ -346,7 +347,7 @@ begin
 			convert_integer(symbol)
 		else
 		  begin
-			$upcase(symbol.string, symbol.string);
+			str$upcase(%descr symbol.string, symbol.string);
 			lookup_keyword(symbol);
 			if (symbol.token=unknown) then
 				symbol.token:=identifier;

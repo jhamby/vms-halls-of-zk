@@ -1,6 +1,4 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
-	 'lib$:sysdef',
 	 'lib$:zk$routines_def', 'lib$:zk$action_def',
 	 'lib$:zk$context_def',
 	 'lib$:zk$room', 'lib$:zk$text', 'lib$:zk$obj',

@@ -1,5 +1,5 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
+	 'pascal$str_routines',
 	 'lib$:ifc$def',
 	 'lib$:ifc$lex_def')]
 
@@ -262,7 +262,7 @@ begin
 	p:=ast.symbol_hash_table[i];
 	while ((p<>nil) and (not found)) do
 	  begin
-		state:=$compare(symbol, p^.symbol);
+		state:=str$compare(symbol, p^.symbol);
 		if (state<>1) then found:=true
 		else
 		  begin

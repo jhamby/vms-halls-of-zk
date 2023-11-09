@@ -1,6 +1,6 @@
 [inherit('lib$:typedef',
-	 'lib$:sysdef',
-	 'lib$:rtldef',
+	 'starlet',
+	 'pascal$lib_routines',
 	 'lib$:zk$context_def',
 	 'lib$:zk$routines_def',
 	 'lib$:zk$action_def',
@@ -282,7 +282,7 @@ begin
 	 * However, if the equivalence is empty, it will revert to the
 	 * actual process username, like it originaly did.
 	 *)
-	return:=$get_logical('ZK$MULTI_USER',context.username,
+	return:=lib$get_logical('ZK$MULTI_USER',context.username,
 			     context.username_length);
 	if ( odd(return) ) then
 	 begin
@@ -301,7 +301,7 @@ begin
 		item_list[2].item_code:=0;
 
 		return:=$getjpiw(,,,item_list);
-		if (not odd(return)) then $signal(return);
+		if (not odd(return)) then lib$signal(return);
 	 end;
 
 	$describe_room(context, start, false, false);
@@ -367,7 +367,7 @@ begin
 	item_list[5].item_code:=0;
 
 	return:=$getsyiw(,,,item_list);
-	if (not odd(return)) then $signal(return);
+	if (not odd(return)) then lib$signal(return);
 
 	writeln(save_file, start_record::$start_record_buf);
 end;

@@ -1,6 +1,7 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
-	 'lib$:sysdef',
+	 'starlet',
+	 'pascal$lib_routines',
+	 'pascal$str_routines',
 	 'lib$:zk$context_def',
 	 'lib$:zk$routines_def', 'lib$:zk$object_def',
 	 'lib$:zk$room', 'lib$:zk$text', 'lib$:zk$obj', 'lib$:zk$desc',
@@ -166,7 +167,8 @@ end;
 	seen_room : boolean;
 	brief : boolean) : boolean;
 
-var	safe_object, day_number, i : integer;
+var	safe_object, i : integer;
+	day_number : unsigned;
 	description, description1 : unsigned;
 	safe_ptr : $object_ptr;
 	name : varying[31] of char;
@@ -193,7 +195,7 @@ begin
 		  begin
 			zk$version;
 			$gettim(now);
-			$day_of_week(now, day_number);
+			lib$day_of_week(now, day_number);
 			if (day_number<6) then
 			  begin
 				$bintim('-- 8:00:00.00', eight);
@@ -316,7 +318,7 @@ begin
 	else
 	if (context.location=zk$room_entrance) then
 	  begin
-		state:=$compare(string, magic_word);
+		state:=str$compare(string, magic_word);
 		if (state<>0) then $message(zk$text_collapse)
 		else
 		  begin

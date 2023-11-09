@@ -1,6 +1,5 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
-	 'lib$:dscdef',
+	 'pascal$str_routines',
 	 'ifc$library:ifc$rtl_def',
 	 'lib$:zk$def')]
 module zk$lex;
@@ -384,8 +383,7 @@ procedure lookup_keyword(var symbol : $symbol_desc);
 var	found : boolean;
 	t, m, b, state : integer;
 	nl, kl : $uword;
-	keyword_desc : [static] $descriptor :=
-		(0, dsc$k_dtype_t, dsc$k_class_s, 0);
+	cmp_len : $uword;
 begin
 	nl:=symbol.string.length;
 	t:=1; b:=number_keywords; found:=false;
@@ -395,12 +393,10 @@ begin
 
 		kl:=keyword_table[m].string.length;
 		if ( (nl < kl) and (nl>=4) ) then
-			keyword_desc.dsc$w_length:=nl
-		else	keyword_desc.dsc$w_length:=kl;
-		keyword_desc.dsc$a_pointer:=
-			iaddress(keyword_table[m].string.body);
+			cmp_len:=nl
+		else	cmp_len:=kl;
 
-		state:=$compare_vs_dx(symbol.string, keyword_desc);
+		state:=str$compare(symbol.string, keyword_table[m].string[1..cmp_len]);
 		if (state=0) then found:=true
 		else
 			if (state=-1) then b:=m-1 else t:=m+1;

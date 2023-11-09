@@ -1,5 +1,5 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
+	 'pascal$lib_routines',
 	 'lib$:ifc$msg_def'),
 ident('X01.00-00')]
 module ifc$rtl_pascal; (* IFC Run-Time System code in PASCAL *)
@@ -24,6 +24,8 @@ type	$room = packed record
 			info : packed array[1..16] of integer;
 		end;
 
+	$chars = packed array[1..16] of char;
+
 	$pointer = [unsafe, long] packed record
 			case integer of
 			1 : (address : unsigned);
@@ -32,22 +34,23 @@ type	$room = packed record
 			4 : (long_ptr : ^unsigned);
 			5 : (room_ptr : ^$room);
 			6 : (object_ptr : ^$object);
+			7 : (char_ptr : ^$chars);
 		   end;
 
 [global] function ifc$get_room_info(
 	var table : unsigned;
 	room_number : integer;
 	var description : unsigned;
-	var name : $quad;
-	var link : [truncate] packed array[$l1..$u1:integer] of $ubyte;
+	var name : varying[$u1] of char;
+	var link : [truncate] packed array[$l2..$u2:integer] of $ubyte;
 	var class : [truncate] integer) : unsigned;
 
 var	n, p : $pointer;
 	return : unsigned;
 	i : integer;
 begin
-	establish($sig_to_ret);
-	if (room_number<1) then $signal(ifc$_badroom);
+	establish(lib$sig_to_ret);
+	if (room_number<1) then lib$signal(ifc$_badroom);
 
 	p.address:=iaddress(table) + (room_number-1)*68;
 
@@ -58,8 +61,10 @@ begin
 		for i:=1 to 14 do link[i]:=p.room_ptr^.link[i];
 
 	n:=p.room_ptr^.name;
-	return:=$copy_r_dx(n.byte_ptr^, n.address+1, name);
-	if (not odd(return)) then $signal(return);
+	i:=n.byte_ptr^;
+	n.address := n.address + 1;
+	return:=lib$scopy_r_dx(i, n.char_ptr^, %descr name);
+	if (not odd(return)) then lib$signal(return);
 
 	ifc$get_room_info:=1;
 end;
@@ -77,8 +82,8 @@ var	n, p : $pointer;
 	return : unsigned;
 	i : integer;
 begin
-	establish($sig_to_ret);
-	if (object_number<1) then $signal(ifc$_badobj);
+	establish(lib$sig_to_ret);
+	if (object_number<1) then lib$signal(ifc$_badobj);
 
 	p:=iaddress(table) + (object_number-1)*80;
 
@@ -96,8 +101,10 @@ begin
 	  end;
 
 	n:=p.object_ptr^.name;
-	return:=$copy_r_vs(n.byte_ptr^, n.address+1, name);
-	if (not odd(return)) then $signal(return);
+	i:=n.byte_ptr^;
+	n.address := n.address + 1;
+	return:=lib$scopy_r_dx(i, n.char_ptr^, %descr name);
+	if (not odd(return)) then lib$signal(return);
 
 	ifc$get_object_info:=1;
 end;

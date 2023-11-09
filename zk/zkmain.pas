@@ -1,7 +1,7 @@
 [inherit('lib$:typedef',
-	 'lib$:rtldef',
-	 'lib$:smgdef',
-	 'lib$:sysdef',
+	 'starlet',
+	 'pascal$lib_routines',
+	 'pascal$smg_routines',
 	 'lib$:zk$def',
 	 'lib$:zk$context_def',
 	 'lib$:zk$parse_def', 'lib$:zk$lex_def', 'lib$:zk$ast_def',
@@ -35,13 +35,13 @@ begin
 		if (uand(signal[1],7)=4) then
 		  begin
 			$message(zk$text_failure);
-			$putmsg(signal, message_routine);
+			$putmsg(signal, %immed message_routine);
 			$unwind;
 		  end
 		else
 		  begin
 			$message(zk$text_warning);
-			$putmsg(signal, message_routine);
+			$putmsg(signal, %immed message_routine);
 			$message(0);
 			condition_handler:=ss$_continue;
 		  end;
@@ -76,7 +76,7 @@ begin
 				$message(0,0,zk$text_broadcast_outside)
 			else	$message(0,0,zk$text_broadcast_inside);
 			return:=$output_broadcast_messages;
-			if (not odd(return)) then $signal(return);
+			if (not odd(return)) then lib$signal(return);
 			context.flags.messages_pending:=false;
 		  end;
 	  end
@@ -88,8 +88,8 @@ procedure main;
 var	context : $context_block;
 	return : unsigned;
 begin
-	return:=$init_screen('ZK$KEY_DEF',broadcast_handler,iaddress(context));
-	if (not odd(return)) then $signal(return)
+	return:=$init_screen('ZK$KEY_DEF', %immed broadcast_handler, iaddress(context));
+	if (not odd(return)) then lib$signal(return)
 	else
 	  begin
 		$initialize(context);
@@ -107,7 +107,7 @@ begin
 		$message(0); $score(context); $message(0);
 
 		return:=$finish_screen;
-		if (not odd(return)) then $signal(return);
+		if (not odd(return)) then lib$signal(return);
 	  end;
 end;
 

@@ -27,7 +27,7 @@ module zk$action_def;
 	var name : varying[$u1] of char) : boolean;
 	extern;
 
-[external(zk$wait)] function $wait(
+[external(zk$wait)] function zk$wait(
 	var context : $context_block;
 	actor_ptr : $object_ptr;
 	var name : varying[$u1] of char) : boolean;
