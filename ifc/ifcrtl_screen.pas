@@ -83,26 +83,6 @@ begin
 	return:=smg$paste_virtual_display(main_display,screen,2,1);
 	if (not odd(return)) then lib$signal(return);
 
-	(* KLUDGE FOR V40,V41 SMG BUGS BEGINS HERE *)
-(*
-	item_list[1].buffer_length:=8;
-	item_list[1].item_code:=syi$_version;
-	item_list[1].buffer_address:=iaddress(version);
-	item_list[1].return_length_address:=0;
-	item_list[2].buffer_length:=0;
-	item_list[2].item_code:=0;
-
-	return:=$getsyiw(,,,item_list);
-	if (not odd(return)) then lib$signal(return);
-
-	if ( (version[2]='4') and
-		( (version[4]='0') or (version[4]='1') ) ) then
-	  begin
-		return:=$set_cursor_abs(main_display, 23, 1);
-		if (not odd(return)) then lib$signal(return);
-	  end;
-*)
-
 	ifc$init_screen:=ss$_normal;
 end;
 
@@ -174,14 +154,14 @@ begin
 	(* if (present(new_attributes)) then *) attributes:=new_attributes;
 
 	(* if (not present(column_number)) then
-		return:=$put_with_scroll(main_display)
+		return:=smg$put_line(main_display)
 	else *)
 	if (column_number=1) then
-		return:=smg$put_with_scroll(main_display,%descr string,,attributes,,1)
+		return:=smg$put_line(main_display,%descr string,,attributes)
 	else
 	  begin
 		temp := pad('', ' ', column_number-1) + string;
-		return:=smg$put_with_scroll(main_display, temp,, attributes,,1)
+		return:=smg$put_line(main_display, temp,, attributes)
 	  end;
 
 	put_scroll_dx:=return;
@@ -413,8 +393,7 @@ begin
 	return:=smg$get_broadcast_message(screen, %descr message);
 	while ( odd(return) and (return<>smg$_no_mormsg) ) do
 	  begin
-		return:=smg$put_with_scroll(main_display, message,,
-						smg$m_reverse,,1);
+		return:=smg$put_line(main_display, message,, smg$m_reverse);
 		if (odd(return)) then
 			return:=smg$get_broadcast_message(screen, %descr message);
 	  end;
