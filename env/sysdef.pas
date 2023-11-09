@@ -17,7 +17,7 @@ type	$exit_block = record
 			param2 : [unsafe] unsigned;
 			param3 : [unsafe] unsigned;
 		      end;
-
+(* moved to typedef.pas
 	$item = record
 			buffer_length : $uword;
 			item_code : $uword;
@@ -25,6 +25,7 @@ type	$exit_block = record
 			return_length_address : unsigned;
 		end;
 	$item_list = packed array[1..10] of $item;
+*)
 
 	$signal_arg_vector = packed array[0..255] of [unsafe] integer;
 	$mech_arg_vector = packed array[0..4] of [unsafe] integer;

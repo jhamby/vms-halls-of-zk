@@ -2,11 +2,11 @@
 module ifc$rtl_def;
 
 [asynchronous, external(ifc$message)] function $message(
-	%immed message_codes : [list] unsigned) : unsigned;
+	message_codes : [list] unsigned) : unsigned;
 	extern;
 
 [asynchronous, external(ifc$message_indent)] function $message_indent(
-	%immed message_codes : [list] unsigned) : unsigned;
+	message_codes : [list] unsigned) : unsigned;
 	extern;
 
 [external(ifc$get_room_info)] function $get_room_info(
